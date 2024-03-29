@@ -14,11 +14,6 @@ config/name="Grew Up In The Dungeon"
 run/main_scene="res://scenes/test.tscn"
 config/features=PackedStringArray("4.2", "C#", "Mobile")
 
-[display]
-
-window/size/viewport_width=1920
-window/size/viewport_height=1080
-
 [dotnet]
 
 project/assembly_name="Grew Up In The Dungeon"
@@ -26,6 +21,7 @@ project/assembly_name="Grew Up In The Dungeon"
 [file_customization]
 
 folder_colors={
+"res://debug/": "yellow",
 "res://scripts/game/entities/": "teal",
 "res://scripts/game/modules/": "red"
 }

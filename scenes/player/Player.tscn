@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://cpdwgd13s0wqo"]
+[gd_scene load_steps=49 format=3 uid="uid://cpdwgd13s0wqo"]
 
 [ext_resource type="Texture2D" uid="uid://c1a0dxswcym8c" path="res://resources/art/frames/elf_m_idle_anim_f0.png" id="2_kvcse"]
 [ext_resource type="Texture2D" uid="uid://dlkm61ahklult" path="res://resources/art/sword-frame1.png" id="3_odjag"]
@@ -16,9 +16,11 @@
 [ext_resource type="PackedScene" uid="uid://dn57fq3k8wiea" path="res://scenes/weapon/Weapon.tscn" id="11_hph24"]
 [ext_resource type="Script" path="res://scripts/game/modules/animation/PlayerAnimationModule.cs" id="15_0vdei"]
 [ext_resource type="Script" path="res://scripts/game/modules/input/PlayerInputModule.cs" id="16_ahk7n"]
+[ext_resource type="Script" path="res://debug/PlayerStateDebug.cs" id="17_5fi58"]
 [ext_resource type="Script" path="res://scripts/game/modules/movement/MovementModule.cs" id="17_aoewx"]
-[ext_resource type="Script" path="res://scripts/game/entities/Player/Player.cs" id="18_xiofb"]
+[ext_resource type="Script" path="res://scripts/game/entities/player/Player.cs" id="18_1k2fs"]
 [ext_resource type="Script" path="res://scripts/game/entities/player/states/PlayerIdleState.cs" id="19_7l7yo"]
+[ext_resource type="Script" path="res://scripts/game/entities/player/states/PlayerRunningState.cs" id="21_pc60l"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thlgb"]
 size = Vector2(10, 12)
@@ -1064,24 +1066,30 @@ flip_h = true
 position = Vector2(18.9, -3.6)
 shape = SubResource("RectangleShape2D_21ii7")
 
-[node name="DebugLabel" type="Label" parent="."]
+[node name="DebugLabel" type="Label" parent="." node_paths=PackedStringArray("player")]
 offset_left = -38.5733
 offset_top = -50.1981
 offset_right = 1.42673
 offset_bottom = -27.1981
 text = "State"
+script = ExtResource("17_5fi58")
+player = NodePath("../Entity")
 metadata/_edit_use_anchors_ = true
 
 [node name="InputModule" type="Node" parent="."]
 script = ExtResource("16_ahk7n")
 
-[node name="Entity" type="Node" parent="." node_paths=PackedStringArray("_inputModule", "_movementModule", "_animationModule")]
-script = ExtResource("18_xiofb")
-_inputModule = NodePath("../InputModule")
-_movementModule = NodePath("..")
-_animationModule = NodePath("../AnimationTree")
+[node name="Entity" type="Node" parent="." node_paths=PackedStringArray("inputModule", "movementModule", "animationModule", "initialState")]
+script = ExtResource("18_1k2fs")
+inputModule = NodePath("../InputModule")
+movementModule = NodePath("..")
+animationModule = NodePath("../AnimationTree")
+initialState = NodePath("Idle")
 
 [node name="Idle" type="Node" parent="Entity"]
 script = ExtResource("19_7l7yo")
+
+[node name="Run" type="Node" parent="Entity"]
+script = ExtResource("21_pc60l")
 
 [editable path="Weapon"]

@@ -8,5 +8,6 @@ public partial class PlayerInputModule : InputModule
 		HorizontalInput = Input.GetAxis("move_player_left", "move_player_right");
 		VerticalInput = Input.GetAxis("move_player_up", "move_player_down");
 		Direction = new Vector2(HorizontalInput, VerticalInput);
+		IsMoving = (Mathf.Abs(HorizontalInput) + Mathf.Abs(VerticalInput)) != 0f;
 	}
 }

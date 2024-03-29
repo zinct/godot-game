@@ -20,7 +20,7 @@ public partial class PlayerAnimationModule : AnimationModule
 		}
 	}
 
-	private void SetIdle(bool value)
+	public void SetIdle(bool value)
 	{
 		Set("parameters/conditions/is_idle", value);
 		Set("parameters/conditions/is_running", !value);
@@ -34,14 +34,14 @@ public partial class PlayerAnimationModule : AnimationModule
 		Set("parameters/conditions/is_attack", !value);
 	}
 
-	private void SetAttack(bool value)
+	public void SetAttack(bool value)
 	{
 		Set("parameters/conditions/is_idle", !value);
 		Set("parameters/conditions/is_running", !value);
 		Set("parameters/conditions/is_attack", value);
 	}
 
-	private void HandleRotatePlayer(float direction)
+	public void HandleRotatePlayer(float direction)
 	{
 		Set("parameters/attack/blend_position", direction);
 		Set("parameters/running/blend_position", direction);

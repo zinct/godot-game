@@ -10,8 +10,8 @@ public partial class Entity : Node
 	[Signal]
 	public delegate void TransitionChangedEventHandler(State previousState, State nextState);
 
-	protected State currentState;
-	protected State previousState;
+	public State currentState;
+	public State previousState;
 	private Dictionary<String, State> _states;
 
 	public override void _Ready()
