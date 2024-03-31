@@ -26,4 +26,9 @@ public partial class MovementModule : CharacterBody2D
 		Velocity = velocity;
 		MoveAndSlide();
 	}
+
+	public void SetVelocityToZero()
+	{
+		Velocity = Vector2.Zero;
+	}
 }

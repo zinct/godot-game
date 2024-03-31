@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://cpdwgd13s0wqo"]
+[gd_scene load_steps=52 format=3 uid="uid://cpdwgd13s0wqo"]
 
 [ext_resource type="Texture2D" uid="uid://c1a0dxswcym8c" path="res://resources/art/frames/elf_m_idle_anim_f0.png" id="2_kvcse"]
 [ext_resource type="Texture2D" uid="uid://dlkm61ahklult" path="res://resources/art/sword-frame1.png" id="3_odjag"]
@@ -19,8 +19,10 @@
 [ext_resource type="Script" path="res://debug/PlayerStateDebug.cs" id="17_5fi58"]
 [ext_resource type="Script" path="res://scripts/game/modules/movement/MovementModule.cs" id="17_aoewx"]
 [ext_resource type="Script" path="res://scripts/game/entities/player/Player.cs" id="18_1k2fs"]
+[ext_resource type="Script" path="res://debug/PlayerMovementDebug.cs" id="18_f4o28"]
 [ext_resource type="Script" path="res://scripts/game/entities/player/states/PlayerIdleState.cs" id="19_7l7yo"]
 [ext_resource type="Script" path="res://scripts/game/entities/player/states/PlayerRunningState.cs" id="21_pc60l"]
+[ext_resource type="Script" path="res://scripts/game/entities/player/states/PlayerAttackState.cs" id="23_q5opx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_thlgb"]
 size = Vector2(10, 12)
@@ -91,7 +93,6 @@ tracks/4/keys = {
 [sub_resource type="Animation" id="Animation_eyb25"]
 resource_name = "attack_left"
 length = 0.200007
-step = 0.0666667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -282,6 +283,20 @@ tracks/15/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
 "values": [0.0, 0.0, 0.0, 0.0]
+}
+tracks/16/type = "method"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("Entity/Attack")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {
+"times": PackedFloat32Array(0.2),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"attack"],
+"method": &"OnAnimationTreeAnimationFinished"
+}]
 }
 
 [sub_resource type="Animation" id="Animation_ar8s1"]
@@ -481,6 +496,20 @@ tracks/15/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
 "values": [0.0, 0.0, 0.0, 0.0]
+}
+tracks/16/type = "method"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("Entity/Attack")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {
+"times": PackedFloat32Array(0.2),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [&"attack"],
+"method": &"OnAnimationTreeAnimationFinished"
+}]
 }
 
 [sub_resource type="Animation" id="Animation_6g0vd"]
@@ -1010,6 +1039,9 @@ transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_21ii7"]
 size = Vector2(20, 10.0625)
 
+[sub_resource type="LabelSettings" id="LabelSettings_1kyuc"]
+font_size = 13
+
 [node name="CharacterBody2D" type="CharacterBody2D"]
 position = Vector2(1, 0)
 scale = Vector2(1.8925, 1.8925)
@@ -1020,7 +1052,8 @@ script = ExtResource("17_aoewx")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-2.38419e-07, -6.5)
 scale = Vector2(1.16667, 1.16667)
-texture = ExtResource("2_kvcse")
+texture = ExtResource("4_xdq7i")
+flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
@@ -1053,12 +1086,13 @@ script = ExtResource("15_0vdei")
 position = Vector2(3.6, 3.6)
 
 [node name="Sprite2D" parent="Weapon" index="0"]
-position = Vector2(-0.0999997, -0.099999)
+visible = false
+position = Vector2(-0.0999997, 0.900001)
 
 [node name="SplashSprite2D" parent="Weapon" index="1"]
-visible = false
 position = Vector2(-10.35, 28.3868)
 scale = Vector2(2.36999, 1.82948)
+texture = ExtResource("7_g57qi")
 offset = Vector2(10.923, -19.177)
 flip_h = true
 
@@ -1067,14 +1101,26 @@ position = Vector2(18.9, -3.6)
 shape = SubResource("RectangleShape2D_21ii7")
 
 [node name="DebugLabel" type="Label" parent="." node_paths=PackedStringArray("player")]
-offset_left = -38.5733
-offset_top = -50.1981
-offset_right = 1.42673
-offset_bottom = -27.1981
+visible = false
+offset_left = -21.1361
+offset_top = -63.4082
+offset_right = 18.864
+offset_bottom = -40.4082
 text = "State"
+label_settings = SubResource("LabelSettings_1kyuc")
 script = ExtResource("17_5fi58")
 player = NodePath("../Entity")
 metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="." node_paths=PackedStringArray("player")]
+visible = false
+offset_left = -20.0793
+offset_top = -44.9141
+offset_right = 71.9207
+offset_bottom = -21.9141
+text = "Movement : "
+script = ExtResource("18_f4o28")
+player = NodePath("../Entity")
 
 [node name="InputModule" type="Node" parent="."]
 script = ExtResource("16_ahk7n")
@@ -1091,5 +1137,8 @@ script = ExtResource("19_7l7yo")
 
 [node name="Run" type="Node" parent="Entity"]
 script = ExtResource("21_pc60l")
+
+[node name="Attack" type="Node" parent="Entity"]
+script = ExtResource("23_q5opx")
 
 [editable path="Weapon"]

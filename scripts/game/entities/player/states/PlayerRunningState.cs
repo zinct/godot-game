@@ -17,12 +17,12 @@ public partial class PlayerRunningState : State
     public override void Update(double delta)
     {
         _player.inputModule.HandleInput(delta);
-        bool isMoving = _player.inputModule.IsMoving; 
-        float horinzontalInput = _player.inputModule.HorizontalInput;
+        bool isMoving = _player.inputModule.IsMoving;
+        float latestHorizontalInput = _player.inputModule.LatestHorizontalInput;
 
-        _player.animationModule.HandleRotatePlayer(horinzontalInput);
+        _player.animationModule.HandleRotatePlayer(latestHorizontalInput);
 
-        if (Input.IsActionJustPressed("player_attack"))
+        if (_player.inputModule.IsAttackInput)
             entity.TransitionTo("attack");
 
         if (!isMoving)
@@ -31,9 +31,7 @@ public partial class PlayerRunningState : State
 
     public override void PhysicsUpdate(double delta)
     {
-        _player.inputModule.HandleInput(delta);
-        Vector2 direction = _player.inputModule.Direction;
-        _player.movementModule.HandleMovement(delta, direction);
+        _player.movementModule.HandleMovement(delta, _player.inputModule.Direction);
     }
 
     public override void Exit()

@@ -5,7 +5,7 @@ public partial class Player : Entity
 {
     [ExportGroup("Nodes")]
     [Export]
-    public InputModule inputModule;
+    public PlayerInputModule inputModule;
     [Export]
     public MovementModule movementModule;
     [Export]

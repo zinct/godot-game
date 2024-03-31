@@ -30,7 +30,7 @@ public partial class Entity : Node
 		}
 
 		currentState = initialState;
-		currentState.Enter();
+		currentState?.Enter();
 	}
 
 	public void TransitionTo(String key, dynamic args = null)

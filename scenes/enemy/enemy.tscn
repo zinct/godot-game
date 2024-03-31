@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://ct6x0x408hm3e"]
+[gd_scene load_steps=29 format=3 uid="uid://ct6x0x408hm3e"]
 
 [ext_resource type="Script" path="res://scripts/game/entities/enemy/Enemy.cs" id="1_swka3"]
 [ext_resource type="Texture2D" uid="uid://c85c4xrlr2riy" path="res://resources/art/frames/goblin_idle_anim_f0.png" id="2_jqtls"]
@@ -9,6 +9,12 @@
 [ext_resource type="Texture2D" uid="uid://ypxso42toqaa" path="res://resources/art/frames/goblin_run_anim_f1.png" id="7_y64tb"]
 [ext_resource type="Texture2D" uid="uid://dvcvgy1cvi704" path="res://resources/art/frames/goblin_run_anim_f2.png" id="8_x2pyi"]
 [ext_resource type="Texture2D" uid="uid://dip4sc3ha4jh0" path="res://resources/art/frames/goblin_run_anim_f3.png" id="9_84xir"]
+[ext_resource type="Script" path="res://scripts/game/modules/damage/DamageModule.cs" id="10_6qm3f"]
+[ext_resource type="Script" path="res://scripts/game/entities/enemy/states/EnemyIdleState.cs" id="10_gv7gj"]
+[ext_resource type="Script" path="res://debug/EnemyHealthDebug.cs" id="10_stlds"]
+[ext_resource type="Script" path="res://scripts/game/entities/enemy/states/EnemyHitState.cs" id="11_abx8g"]
+[ext_resource type="Script" path="res://debug/EnemyStateDebug.cs" id="12_fxq71"]
+[ext_resource type="Script" path="res://scripts/game/modules/health/HealthModule.cs" id="12_x3jry"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dcebd"]
 size = Vector2(6.16666, 7.33333)
@@ -178,11 +184,16 @@ blend_mode = 1
 states/running/node = SubResource("AnimationNodeBlendSpace1D_m34a7")
 states/running/position = Vector2(534, 105)
 
+[sub_resource type="LabelSettings" id="LabelSettings_shk7q"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_rh5uv"]
+font_size = 24
+
 [node name="Enemy" type="CharacterBody2D"]
 scale = Vector2(3.32777, 3.32777)
 collision_layer = 4
 collision_mask = 8
-script = ExtResource("1_swka3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(2.38419e-07, -1)
@@ -206,17 +217,41 @@ tree_root = SubResource("AnimationNodeStateMachine_nhxds")
 anim_player = NodePath("../AnimationPlayer")
 parameters/running/blend_position = 0
 
-[node name="FiniteStateMachine" type="Node" parent="."]
+[node name="Entity" type="Node" parent="." node_paths=PackedStringArray("healthModule", "initialState")]
+script = ExtResource("1_swka3")
+healthModule = NodePath("../HealthModule")
+initialState = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="FiniteStateMachine"]
+[node name="Idle" type="Node" parent="Entity"]
+script = ExtResource("10_gv7gj")
 
-[node name="Casing" type="Node" parent="FiniteStateMachine"]
+[node name="Hit" type="Node" parent="Entity"]
+script = ExtResource("11_abx8g")
 
-[node name="Hit" type="Node" parent="FiniteStateMachine"]
+[node name="Label2" type="Label" parent="." node_paths=PackedStringArray("entity")]
+offset_left = -12.6211
+offset_top = -17.4291
+offset_right = 59.3789
+offset_bottom = 16.5709
+scale = Vector2(0.2, 0.2)
+text = "State: "
+label_settings = SubResource("LabelSettings_shk7q")
+script = ExtResource("12_fxq71")
+entity = NodePath("../Entity")
 
-[node name="Label" type="Label" parent="."]
-offset_left = -37.3333
-offset_top = -52.6667
-offset_right = 22.6667
-offset_bottom = -29.6667
+[node name="Label" type="Label" parent="." node_paths=PackedStringArray("enemy")]
+offset_left = -12.6211
+offset_top = -24.3406
+offset_right = 77.3789
+offset_bottom = 9.65938
+scale = Vector2(0.2, 0.2)
 text = "Health: "
+label_settings = SubResource("LabelSettings_rh5uv")
+script = ExtResource("10_stlds")
+enemy = NodePath("../Entity")
+
+[node name="HealthModule" type="Node" parent="."]
+script = ExtResource("12_x3jry")
+
+[node name="DamageModule" type="Node" parent="."]
+script = ExtResource("10_6qm3f")
