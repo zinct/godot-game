@@ -10,12 +10,13 @@ public partial class HealthModule : Node
 		get => _health;
 		set
 		{
-			if (_health - value <= 0)
+			_health = value;
+
+			if(_health <= 0)
 			{
 				_health = 0;
 				EmitSignal(SignalName.HealthDepleted);
 			}
-			else _health = value;
 		}
 	}
 

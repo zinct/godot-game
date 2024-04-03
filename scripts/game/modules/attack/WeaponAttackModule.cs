@@ -7,8 +7,8 @@ public partial class WeaponAttackModule : AttackModule
 	{
 		foreach (Node child in body.GetChildren())
 		{
-			if (child is Enemy enemy)
-				enemy?.OnDamageReceived(attackDamage);
+			if (child is DamageModule damageModule)
+				damageModule?.Hit(attackDamage);
 		}
 	}
 }

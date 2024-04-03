@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://ct6x0x408hm3e"]
+[gd_scene load_steps=26 format=3 uid="uid://ct6x0x408hm3e"]
 
 [ext_resource type="Script" path="res://scripts/game/entities/enemy/Enemy.cs" id="1_swka3"]
 [ext_resource type="Texture2D" uid="uid://c85c4xrlr2riy" path="res://resources/art/frames/goblin_idle_anim_f0.png" id="2_jqtls"]
@@ -11,13 +11,12 @@
 [ext_resource type="Texture2D" uid="uid://dip4sc3ha4jh0" path="res://resources/art/frames/goblin_run_anim_f3.png" id="9_84xir"]
 [ext_resource type="Script" path="res://scripts/game/modules/damage/DamageModule.cs" id="10_6qm3f"]
 [ext_resource type="Script" path="res://scripts/game/entities/enemy/states/EnemyIdleState.cs" id="10_gv7gj"]
-[ext_resource type="Script" path="res://debug/EnemyHealthDebug.cs" id="10_stlds"]
 [ext_resource type="Script" path="res://scripts/game/entities/enemy/states/EnemyHitState.cs" id="11_abx8g"]
-[ext_resource type="Script" path="res://debug/EnemyStateDebug.cs" id="12_fxq71"]
 [ext_resource type="Script" path="res://scripts/game/modules/health/HealthModule.cs" id="12_x3jry"]
+[ext_resource type="Script" path="res://scripts/game/modules/knockback/KnockbackModule.cs" id="17_ia28k"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dcebd"]
-size = Vector2(6.16666, 7.33333)
+size = Vector2(19.5, 21.5)
 
 [sub_resource type="Animation" id="Animation_jq28q"]
 length = 0.001
@@ -184,24 +183,22 @@ blend_mode = 1
 states/running/node = SubResource("AnimationNodeBlendSpace1D_m34a7")
 states/running/position = Vector2(534, 105)
 
-[sub_resource type="LabelSettings" id="LabelSettings_shk7q"]
-font_size = 24
-
-[sub_resource type="LabelSettings" id="LabelSettings_rh5uv"]
-font_size = 24
-
-[node name="Enemy" type="CharacterBody2D"]
-scale = Vector2(3.32777, 3.32777)
+[node name="Enemy" type="RigidBody2D"]
 collision_layer = 4
 collision_mask = 8
+gravity_scale = 0.0
+lock_rotation = true
+linear_damp_mode = 1
+linear_damp = 10.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(2.38419e-07, -1)
-scale = Vector2(0.6875, 0.6875)
+position = Vector2(-4.76837e-07, 4.76837e-07)
+scale = Vector2(2.0625, 2.0625)
 texture = ExtResource("2_jqtls")
 flip_h = true
 
 [node name="CharacterCollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.75, 6.25)
 shape = SubResource("RectangleShape2D_dcebd")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -217,41 +214,35 @@ tree_root = SubResource("AnimationNodeStateMachine_nhxds")
 anim_player = NodePath("../AnimationPlayer")
 parameters/running/blend_position = 0
 
-[node name="Entity" type="Node" parent="." node_paths=PackedStringArray("healthModule", "initialState")]
+[node name="Entity" type="Node" parent="." node_paths=PackedStringArray("healthModule", "knockbackModule", "initialState")]
 script = ExtResource("1_swka3")
 healthModule = NodePath("../HealthModule")
+knockbackModule = NodePath("../KnockbackModule")
 initialState = NodePath("Idle")
 
 [node name="Idle" type="Node" parent="Entity"]
 script = ExtResource("10_gv7gj")
 
-[node name="Hit" type="Node" parent="Entity"]
+[node name="Hit" type="Node" parent="Entity" node_paths=PackedStringArray("_timer", "_rigidBody2D")]
 script = ExtResource("11_abx8g")
+_timer = NodePath("Timer")
+_rigidBody2D = NodePath("../..")
 
-[node name="Label2" type="Label" parent="." node_paths=PackedStringArray("entity")]
-offset_left = -12.6211
-offset_top = -17.4291
-offset_right = 59.3789
-offset_bottom = 16.5709
-scale = Vector2(0.2, 0.2)
-text = "State: "
-label_settings = SubResource("LabelSettings_shk7q")
-script = ExtResource("12_fxq71")
-entity = NodePath("../Entity")
-
-[node name="Label" type="Label" parent="." node_paths=PackedStringArray("enemy")]
-offset_left = -12.6211
-offset_top = -24.3406
-offset_right = 77.3789
-offset_bottom = 9.65938
-scale = Vector2(0.2, 0.2)
-text = "Health: "
-label_settings = SubResource("LabelSettings_rh5uv")
-script = ExtResource("10_stlds")
-enemy = NodePath("../Entity")
+[node name="Timer" type="Timer" parent="Entity/Hit"]
+wait_time = 0.2
+one_shot = true
 
 [node name="HealthModule" type="Node" parent="."]
 script = ExtResource("12_x3jry")
 
 [node name="DamageModule" type="Node" parent="."]
 script = ExtResource("10_6qm3f")
+
+[node name="KnockbackModule" type="Node" parent="." node_paths=PackedStringArray("_rigidBody2D")]
+script = ExtResource("17_ia28k")
+force = 900.0
+_rigidBody2D = NodePath("..")
+
+[connection signal="sleeping_state_changed" from="." to="Entity/Hit" method="_on_enemy_sleeping_state_changed"]
+[connection signal="timeout" from="Entity/Hit/Timer" to="Entity/Hit" method="OnTimerTimeout"]
+[connection signal="DamageReceived" from="DamageModule" to="Entity" method="OnDamageModuleDamageReceived"]

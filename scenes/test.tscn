@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bncn66yupwrtd"]
 
-[ext_resource type="PackedScene" uid="uid://cpdwgd13s0wqo" path="res://scenes/player/Player.tscn" id="1_5717d"]
 [ext_resource type="Texture2D" uid="uid://be2drp7lihmj5" path="res://resources/art/atlas_walls_low-16x16.png" id="2_gxfin"]
+[ext_resource type="PackedScene" uid="uid://bb5j402vkqiyy" path="res://game/player/Player.tscn" id="3_padu8"]
 [ext_resource type="PackedScene" uid="uid://ct6x0x408hm3e" path="res://scenes/enemy/enemy.tscn" id="3_rbfg8"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_n0ryy"]
@@ -494,8 +494,10 @@ layer_0/tile_data = PackedInt32Array(524302, 589824, 2, 458766, 589824, 2, 39323
 [node name="Enemy2" parent="." instance=ExtResource("3_rbfg8")]
 position = Vector2(661, 332)
 
-[node name="Player" parent="." instance=ExtResource("1_5717d")]
-position = Vector2(393, 344)
+[node name="Player" parent="." instance=ExtResource("3_padu8")]
+position = Vector2(380, 313)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
-position = Vector2(7.25, -9)
+position = Vector2(7.62939e-06, 0)
+scale = Vector2(1, 1)
+zoom = Vector2(1.3, 1.3)

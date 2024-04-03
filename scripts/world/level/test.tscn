@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://dfqxqjvbaeddh"]
 
 [ext_resource type="Texture2D" uid="uid://be2drp7lihmj5" path="res://resources/art/atlas_walls_low-16x16.png" id="1_at5t4"]
-[ext_resource type="PackedScene" path="res://scenes/enemy/enemy.tscn" id="2_bucsn"]
-[ext_resource type="PackedScene" path="res://scenes/player/Player.tscn" id="14_ur2xy"]
+[ext_resource type="PackedScene" uid="uid://ct6x0x408hm3e" path="res://scenes/enemy/enemy.tscn" id="2_bucsn"]
+[ext_resource type="PackedScene" uid="uid://cpdwgd13s0wqo" path="res://scenes/player/PlayerOld.tscn" id="14_ur2xy"]
 [ext_resource type="AudioStream" uid="uid://6l23tafu2qwr" path="res://resources/audio/10 - The Empire.ogg" id="15_e3ukr"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_n0ryy"]

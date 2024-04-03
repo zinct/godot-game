@@ -1,0 +1,17 @@
+@startuml PlayerLogic
+state "PlayerLogic State" as PlayerLogic_State {
+  state "Alive" as PlayerLogic_State_Alive {
+    state "Idle" as PlayerLogic_State_Idle
+    PlayerLogic_State_Alive : OnEnter → Idle
+    PlayerLogic_State_Alive : OnPhysicsTick → VelocityChanged
+  }
+  state "Disabled" as PlayerLogic_State_Disabled {
+    PlayerLogic_State_Disabled : OnEnter → Idle
+  }
+}
+
+PlayerLogic_State_Alive --> PlayerLogic_State_Alive : PhysicsTick
+PlayerLogic_State_Disabled --> PlayerLogic_State_Idle : Enable
+
+[*] --> PlayerLogic_State_Disabled
+@enduml
